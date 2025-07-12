@@ -1,6 +1,20 @@
 import { supabase } from '@/integrations/supabase/client';
 
 export const setupDemoUsers = async () => {
+  // Check if Supabase is properly configured before attempting to create users
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseKey || 
+      supabaseUrl === 'your_supabase_project_url_here' || 
+      supabaseKey === 'your_supabase_anon_key_here' ||
+      supabaseUrl === 'https://placeholder.supabase.co' ||
+      supabaseKey === 'placeholder-key') {
+    console.warn('⚠️ Supabase not configured properly. Skipping demo user setup.');
+    console.warn('Please configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file');
+    return;
+  }
+
   console.log('Setting up demo users...');
   
   const demoUsers = [
@@ -50,6 +64,11 @@ export const setupDemoUsers = async () => {
       });
 
       if (authError) {
+        if (authError.message.includes('Failed to fetch') || authError.message.includes('fetch')) {
+          console.error('❌ Cannot connect to Supabase. Please check your configuration.');
+          console.error('Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set correctly in .env');
+          return; // Stop trying to create more users
+        }
         if (authError.message.includes('already registered')) {
           console.log(`User ${user.email} already exists`);
           continue;
@@ -81,6 +100,11 @@ export const setupDemoUsers = async () => {
         }
       }
     } catch (error) {
+      if (error instanceof Error && (error.message.includes('Failed to fetch') || error.message.includes('fetch'))) {
+        console.error('❌ Network error: Cannot connect to Supabase');
+        console.error('Please verify your Supabase configuration and internet connection');
+        return; // Stop trying to create more users
+      }
       console.error(`Unexpected error creating user ${user.email}:`, error);
     }
   }

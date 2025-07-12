@@ -20,6 +20,13 @@ if (!import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANO
 if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'your_supabase_project_url_here') {
   console.log('Supabase URL:', SUPABASE_URL);
   console.log('Supabase Key (first 20 chars):', SUPABASE_PUBLISHABLE_KEY?.substring(0, 20) + '...');
+} else {
+  console.warn('🔧 Supabase Configuration Required:');
+  console.warn('1. Create a Supabase project at https://supabase.com/dashboard');
+  console.warn('2. Go to Settings > API in your project');
+  console.warn('3. Copy your Project URL and anon public key');
+  console.warn('4. Update the .env file with your actual values');
+  console.warn('5. Restart the development server');
 }
 
 // Import the supabase client like this:
