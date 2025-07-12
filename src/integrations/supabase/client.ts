@@ -2,20 +2,25 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
-// Validate environment variables
-if (!SUPABASE_URL) {
-  throw new Error('Missing VITE_SUPABASE_URL environment variable. Please check your .env file.');
+// Validate environment variables and provide helpful error messages
+if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'your_supabase_project_url_here') {
+  console.error('⚠️  VITE_SUPABASE_URL is not configured properly in your .env file');
+  console.error('Please set VITE_SUPABASE_URL to your actual Supabase project URL (e.g., https://your-project.supabase.co)');
 }
 
-if (!SUPABASE_PUBLISHABLE_KEY) {
-  throw new Error('Missing VITE_SUPABASE_ANON_KEY environment variable. Please check your .env file.');
+if (!import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY === 'your_supabase_anon_key_here') {
+  console.error('⚠️  VITE_SUPABASE_ANON_KEY is not configured properly in your .env file');
+  console.error('Please set VITE_SUPABASE_ANON_KEY to your actual Supabase anon key');
 }
 
-console.log('Supabase URL:', SUPABASE_URL);
-console.log('Supabase Key (first 20 chars):', SUPABASE_PUBLISHABLE_KEY?.substring(0, 20) + '...');
+// Only log if properly configured
+if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'your_supabase_project_url_here') {
+  console.log('Supabase URL:', SUPABASE_URL);
+  console.log('Supabase Key (first 20 chars):', SUPABASE_PUBLISHABLE_KEY?.substring(0, 20) + '...');
+}
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
