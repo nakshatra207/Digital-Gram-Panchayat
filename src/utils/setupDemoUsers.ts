@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 
 export const setupDemoUsers = async () => {
   // Check if Supabase is properly configured before attempting to create users

@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, ArrowLeft, User, Shield, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { isSupabaseConfigured } from '@/integrations/supabase/client';
 import { setupDemoUsers } from '@/utils/setupDemoUsers';
 
 const OptimizedLogin = () => {
