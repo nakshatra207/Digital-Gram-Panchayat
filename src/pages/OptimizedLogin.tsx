@@ -65,9 +65,10 @@ const OptimizedLogin = () => {
         description: `Welcome back! Redirecting to dashboard...`,
       });
       
-      // Navigate immediately without waiting
-      // Redirect all users to /dashboard for unified fast loading
-      navigate("/dashboard", { replace: true });
+      // Small delay to ensure auth state is updated
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 100);
     } else {
       setError('Login failed. Please check your credentials or configuration.');
     }

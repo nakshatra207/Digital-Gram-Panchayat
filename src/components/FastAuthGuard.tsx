@@ -13,7 +13,7 @@ interface FastAuthGuardProps {
 export const FastAuthGuard: React.FC<FastAuthGuardProps> = ({ 
   children, 
   requireAuth = true,
-  redirectTo = '/login' 
+  redirectTo = '/login'
 }) => {
   const { user, profile, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -21,7 +21,13 @@ export const FastAuthGuard: React.FC<FastAuthGuardProps> = ({
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
-    console.log('FastAuthGuard check:', { user: !!user, profile: !!profile, isLoading, requireAuth });
+    console.log('FastAuthGuard check:', { 
+      user: !!user, 
+      profile: !!profile, 
+      isLoading, 
+      requireAuth,
+      currentPath: location.pathname 
+    });
     
     if (isLoading) {
       setShouldRender(false);
@@ -38,9 +44,8 @@ export const FastAuthGuard: React.FC<FastAuthGuardProps> = ({
       return;
     }
 
-    if (!requireAuth && user) {
+    if (!requireAuth && user && (location.pathname === '/login' || location.pathname === '/register')) {
       console.log('User logged in but accessing auth page, redirecting to dashboard');
-      // ALWAYS redirect to new unified dashboard for all roles
       navigate('/dashboard', { replace: true });
       return;
     }
