@@ -2,14 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const setupDemoUsers = async () => {
   // Check if Supabase is properly configured before attempting to create users
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  
-  if (!supabaseUrl || !supabaseKey || 
-      supabaseUrl === 'your_supabase_project_url_here' || 
-      supabaseKey === 'your_supabase_anon_key_here' ||
-      supabaseUrl === 'https://placeholder.supabase.co' ||
-      supabaseKey === 'placeholder-key') {
+  if (!isSupabaseConfigured) {
     console.warn('⚠️ Supabase not configured properly. Skipping demo user setup.');
     console.warn('Please configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file');
     return;

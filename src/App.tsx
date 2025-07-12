@@ -44,7 +44,7 @@ const queryClient = new QueryClient({
       gcTime: 15 * 60 * 1000, // 15 minutes
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      retry: 1, // Reduced retries for faster failure
+      retry: 0, // No retries to prevent repeated errors in demo mode
       retryDelay: 500, // Faster retry delay
     },
     mutations: {

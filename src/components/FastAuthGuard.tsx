@@ -50,6 +50,13 @@ export const FastAuthGuard: React.FC<FastAuthGuardProps> = ({
       return;
     }
 
+    // Additional check for demo mode users
+    if (requireAuth && user && user.id === 'demo-user-id') {
+      console.log('Demo user authenticated, allowing access');
+      setShouldRender(true);
+      return;
+    }
+
     console.log('FastAuthGuard allowing render');
     setShouldRender(true);
   }, [user, profile, isLoading, requireAuth, navigate, redirectTo, location]);

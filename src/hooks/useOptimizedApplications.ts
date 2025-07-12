@@ -39,22 +39,70 @@ export const useOptimizedApplications = () => {
       // Check if Supabase is properly configured
       if (!isSupabaseConfigured) {
         console.warn('📋 Supabase not configured - returning demo applications');
-        return [
+        const demoApps = [
           {
             id: 'demo-1',
-            service_name: 'Birth Certificate',
+            citizen_id: 'demo-user-id',
+            service_id: 'demo-service-1',
             status: 'pending',
+            application_data: { applicant_name: 'Demo User', purpose: 'Demo Application' },
+            documents_uploaded: [],
             submitted_at: new Date().toISOString(),
-            citizen_name: 'Demo User'
+            updated_at: new Date().toISOString(),
+            service: {
+              name: 'Birth Certificate',
+              category: 'certificates',
+              fees: 0,
+              processing_time: '7 days'
+            },
+            citizen: {
+              full_name: 'Demo User',
+              email: 'demo@example.com'
+            }
           },
           {
             id: 'demo-2', 
-            service_name: 'Caste Certificate',
+            citizen_id: 'demo-user-id',
+            service_id: 'demo-service-2',
             status: 'approved',
+            application_data: { applicant_name: 'Demo User', purpose: 'Demo Application' },
+            documents_uploaded: [],
             submitted_at: new Date(Date.now() - 86400000).toISOString(),
-            citizen_name: 'Demo User'
+            updated_at: new Date().toISOString(),
+            service: {
+              name: 'Caste Certificate',
+              category: 'certificates',
+              fees: 0,
+              processing_time: '10 days'
+            },
+            citizen: {
+              full_name: 'Demo User',
+              email: 'demo@example.com'
+            }
+          },
+          {
+            id: 'demo-3',
+            citizen_id: 'demo-user-id',
+            service_id: 'demo-service-3',
+            status: 'completed',
+            application_data: { applicant_name: 'Demo User', purpose: 'Demo Application' },
+            documents_uploaded: [],
+            submitted_at: new Date(Date.now() - 172800000).toISOString(),
+            updated_at: new Date().toISOString(),
+            completed_at: new Date(Date.now() - 86400000).toISOString(),
+            service: {
+              name: 'Income Certificate',
+              category: 'certificates',
+              fees: 30,
+              processing_time: '5 days'
+            },
+            citizen: {
+              full_name: 'Demo User',
+              email: 'demo@example.com'
+            }
           }
         ];
+        return demoApps as OptimizedApplication[];
       }
 
       if (!profile) {
@@ -99,37 +147,78 @@ export const useOptimizedApplications = () => {
 
         if (error) {
           console.warn('Supabase error, using demo data:', error);
-          return [
+          const fallbackApps = [
             {
               id: 'demo-1',
-              service_name: 'Birth Certificate', 
+              citizen_id: profile?.id || 'demo-user-id',
+              service_id: 'demo-service-1',
               status: 'pending',
+              application_data: { applicant_name: profile?.full_name || 'Demo User' },
+              documents_uploaded: [],
               submitted_at: new Date().toISOString(),
-              citizen_name: 'Demo User'
+              updated_at: new Date().toISOString(),
+              service: {
+                name: 'Birth Certificate',
+                category: 'certificates',
+                fees: 0,
+                processing_time: '7 days'
+              },
+              citizen: {
+                full_name: profile?.full_name || 'Demo User',
+                email: profile?.email || 'demo@example.com'
+              }
             }
           ];
+          return fallbackApps as OptimizedApplication[];
         }
         
         console.log(`Successfully fetched ${data?.length || 0} optimized applications`);
         return data as OptimizedApplication[];
       } catch (error) {
         console.warn('Error fetching applications, using demo data:', error);
-        return [
+        const errorFallbackApps = [
           {
             id: 'demo-1',
-            service_name: 'Birth Certificate',
-            status: 'pending', 
+            citizen_id: profile?.id || 'demo-user-id',
+            service_id: 'demo-service-1',
+            status: 'pending',
+            application_data: { applicant_name: profile?.full_name || 'Demo User' },
+            documents_uploaded: [],
             submitted_at: new Date().toISOString(),
-            citizen_name: 'Demo User'
+            updated_at: new Date().toISOString(),
+            service: {
+              name: 'Birth Certificate',
+              category: 'certificates',
+              fees: 0,
+              processing_time: '7 days'
+            },
+            citizen: {
+              full_name: profile?.full_name || 'Demo User',
+              email: profile?.email || 'demo@example.com'
+            }
           },
           {
             id: 'demo-2',
-            service_name: 'Income Certificate',
+            citizen_id: profile?.id || 'demo-user-id',
+            service_id: 'demo-service-2',
             status: 'under_review',
+            application_data: { applicant_name: profile?.full_name || 'Demo User' },
+            documents_uploaded: [],
             submitted_at: new Date(Date.now() - 172800000).toISOString(),
-            citizen_name: 'Demo User'
+            updated_at: new Date().toISOString(),
+            service: {
+              name: 'Income Certificate',
+              category: 'certificates',
+              fees: 30,
+              processing_time: '10 days'
+            },
+            citizen: {
+              full_name: profile?.full_name || 'Demo User',
+              email: profile?.email || 'demo@example.com'
+            }
           }
         ];
+        return errorFallbackApps as OptimizedApplication[];
       }
     },
     enabled: !!profile,

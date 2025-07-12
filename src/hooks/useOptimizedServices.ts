@@ -29,12 +29,72 @@ const fetchServices = async (): Promise<OptimizedService[]> => {
   console.log('Fetching optimized services with caching...');
   
   // Check if Supabase is properly configured
-  if (!import.meta.env.VITE_SUPABASE_URL || 
-      !import.meta.env.VITE_SUPABASE_ANON_KEY ||
-      import.meta.env.VITE_SUPABASE_URL === 'https://placeholder.supabase.co' ||
-      import.meta.env.VITE_SUPABASE_ANON_KEY === 'placeholder-key') {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured - returning empty services array');
-    return [];
+    // Return demo services instead of empty array
+    const demoServices: OptimizedService[] = [
+      {
+        id: 'demo-service-1',
+        name: 'Birth Certificate',
+        description: 'Official document issued by Gram Panchayat as proof of birth.',
+        category: 'certificates',
+        required_documents: ['Birth Affidavit', 'Hospital Report', 'Parent ID proof'],
+        processing_time: '7 days',
+        fees: 0,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: 'demo-service-2',
+        name: 'Caste Certificate',
+        description: 'Certificate for caste identification for reservation and other government purposes.',
+        category: 'certificates',
+        required_documents: ['Application form', 'Parent Caste certificate', 'Residence proof'],
+        processing_time: '10 days',
+        fees: 0,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: 'demo-service-3',
+        name: 'Income Certificate',
+        description: 'Certificate for income verification for government schemes and applications.',
+        category: 'certificates',
+        required_documents: ['Salary slip', 'Bank statement', 'ID proof'],
+        processing_time: '5 days',
+        fees: 30,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: 'demo-service-4',
+        name: 'Water Connection',
+        description: 'Request new water connections for homes and businesses.',
+        category: 'utilities',
+        required_documents: ['Property papers', 'Residence proof'],
+        processing_time: '21 days',
+        fees: 500,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: 'demo-service-5',
+        name: 'Trade License',
+        description: 'License for operating small businesses within village limits.',
+        category: 'licenses',
+        required_documents: ['Business plan', 'ID proof', 'Address proof'],
+        processing_time: '15 days',
+        fees: 200,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+    ];
+    return demoServices;
   }
 
   const { data, error } = await supabase
@@ -48,8 +108,23 @@ const fetchServices = async (): Promise<OptimizedService[]> => {
     console.error('Error fetching optimized services:', error);
     if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
       console.error('Cannot connect to Supabase. Please check your configuration.');
-      console.error('Returning empty services array for demo mode.');
-      return [];
+      console.error('Returning demo services for demo mode.');
+      // Return demo services on connection error
+      const demoServices: OptimizedService[] = [
+        {
+          id: 'demo-service-1',
+          name: 'Birth Certificate',
+          description: 'Official document issued by Gram Panchayat as proof of birth.',
+          category: 'certificates',
+          required_documents: ['Birth Affidavit', 'Hospital Report', 'Parent ID proof'],
+          processing_time: '7 days',
+          fees: 0,
+          is_active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }
+      ];
+      return demoServices;
     }
     // Print detailed error (status code, message)
     if (error.details) {
@@ -58,11 +133,13 @@ const fetchServices = async (): Promise<OptimizedService[]> => {
     if (error.hint) {
       console.error('Supabase error hint:', error.hint);
     }
-    throw new Error(`Failed to fetch services: ${error.message}, details: ${JSON.stringify(error)}`);
+    console.error(`Failed to fetch services: ${error.message}, details: ${JSON.stringify(error)}`);
+    return []; // Return empty array instead of throwing
   }
   if (!data) {
     console.error('No data returned from Supabase (data is null or undefined).');
-    throw new Error('No data returned from Supabase.');
+    console.error('No data returned from Supabase.');
+    return []; // Return empty array instead of throwing
   }
   
   console.log(`Successfully fetched ${data?.length || 0} optimized services`, data);

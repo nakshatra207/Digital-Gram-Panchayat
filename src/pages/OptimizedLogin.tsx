@@ -100,7 +100,10 @@ const OptimizedLogin = () => {
 
   // Setup demo users on component mount
   React.useEffect(() => {
-    setupDemoUsers().catch(console.error);
+    // Only setup demo users if Supabase is configured
+    if (isSupabaseConfigured) {
+      setupDemoUsers().catch(console.error);
+    }
   }, []);
 
   return (
