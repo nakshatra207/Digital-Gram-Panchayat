@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, ArrowLeft, User, Shield, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { setupDemoUsers } from '@/utils/setupDemoUsers';
 
 const OptimizedLogin = () => {
   const [email, setEmail] = useState('');
@@ -95,6 +96,11 @@ const OptimizedLogin = () => {
     setRole(value);
     if (error) setError(''); // Clear error on input
   }, [error]);
+
+  // Setup demo users on component mount
+  React.useEffect(() => {
+    setupDemoUsers().catch(console.error);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4">
