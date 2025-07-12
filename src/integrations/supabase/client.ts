@@ -2,31 +2,28 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+// Use valid fallback URLs to prevent URL constructor errors
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxOTI4MDAsImV4cCI6MTk2MDc2ODgwMH0.placeholder';
 
-// Validate environment variables and provide helpful error messages
-if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'your_supabase_project_url_here') {
-  console.error('⚠️  VITE_SUPABASE_URL is not configured properly in your .env file');
-  console.error('Please set VITE_SUPABASE_URL to your actual Supabase project URL (e.g., https://your-project.supabase.co)');
-}
+// Check if environment variables are properly configured
+const isConfigured = import.meta.env.VITE_SUPABASE_URL && 
+                    import.meta.env.VITE_SUPABASE_ANON_KEY &&
+                    import.meta.env.VITE_SUPABASE_URL !== 'your_supabase_project_url_here' &&
+                    import.meta.env.VITE_SUPABASE_ANON_KEY !== 'your_supabase_anon_key_here' &&
+                    import.meta.env.VITE_SUPABASE_URL !== 'https://placeholder.supabase.co';
 
-if (!import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY === 'your_supabase_anon_key_here') {
-  console.error('⚠️  VITE_SUPABASE_ANON_KEY is not configured properly in your .env file');
-  console.error('Please set VITE_SUPABASE_ANON_KEY to your actual Supabase anon key');
-}
-
-// Only log if properly configured
-if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'your_supabase_project_url_here') {
-  console.log('Supabase URL:', SUPABASE_URL);
-  console.log('Supabase Key (first 20 chars):', SUPABASE_PUBLISHABLE_KEY?.substring(0, 20) + '...');
-} else {
+if (!isConfigured) {
   console.warn('🔧 Supabase Configuration Required:');
   console.warn('1. Create a Supabase project at https://supabase.com/dashboard');
   console.warn('2. Go to Settings > API in your project');
   console.warn('3. Copy your Project URL and anon public key');
   console.warn('4. Update the .env file with your actual values');
   console.warn('5. Restart the development server');
+  console.warn('');
+  console.warn('Current values:');
+  console.warn('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL || 'not set');
+  console.warn('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? 'set (using placeholder)' : 'not set');
 }
 
 // Import the supabase client like this:
@@ -39,3 +36,6 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     detectSessionInUrl: false
   }
 });
+
+// Export configuration status for other components to check
+export const isSupabaseConfigured = isConfigured;
