@@ -15,7 +15,26 @@ import CitizenDashboard from "./pages/CitizenDashboard";
 import OptimizedServices from "./pages/OptimizedServices";
 import NotFound from "./pages/NotFound";
 import { FastAuthGuard } from "@/components/FastAuthGuard";
-import { LanguageProvider } from "@/contexts/LanguageContext"; // <-- ADD THIS
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ErrorBoundary } from "react-error-boundary";
+
+// Error fallback component
+function ErrorFallback({error}: {error: Error}) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center p-8">
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h2>
+        <p className="text-gray-600 mb-4">{error.message}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Reload Page
+        </button>
+      </div>
+    </div>
+  );
+}
 
 // Enhanced QueryClient configuration for faster authentication
 const queryClient = new QueryClient({
@@ -35,71 +54,73 @@ const queryClient = new QueryClient({
 });
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
-      <TooltipProvider>
-        <OptimizedAuthProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route 
-                path="/login" 
-                element={
-                  <FastAuthGuard requireAuth={false}>
-                    <OptimizedLogin />
-                  </FastAuthGuard>
-                } 
-              />
-              <Route 
-                path="/register" 
-                element={
-                  <FastAuthGuard requireAuth={false}>
-                    <Register />
-                  </FastAuthGuard>
-                } 
-              />
-              <Route 
-                path="/dashboard" 
-                element={
-                  <FastAuthGuard>
-                    <UnifiedDashboard />
-                  </FastAuthGuard>
-                } 
-              />
-              <Route 
-                path="/staff-dashboard" 
-                element={
-                  <FastAuthGuard>
-                    <StaffDashboard />
-                  </FastAuthGuard>
-                } 
-              />
-              <Route 
-                path="/citizen-dashboard" 
-                element={
-                  <FastAuthGuard>
-                    <CitizenDashboard />
-                  </FastAuthGuard>
-                } 
-              />
-              <Route
-                path="/profile"
-                element={
-                  <FastAuthGuard>
-                    <Profile />
-                  </FastAuthGuard>
-                }
-              />
-              <Route path="/services" element={<OptimizedServices />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </OptimizedAuthProvider>
-      </TooltipProvider>
-    </LanguageProvider>
-  </QueryClientProvider>
+  <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <TooltipProvider>
+          <OptimizedAuthProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route 
+                  path="/login" 
+                  element={
+                    <FastAuthGuard requireAuth={false}>
+                      <OptimizedLogin />
+                    </FastAuthGuard>
+                  } 
+                />
+                <Route 
+                  path="/register" 
+                  element={
+                    <FastAuthGuard requireAuth={false}>
+                      <Register />
+                    </FastAuthGuard>
+                  } 
+                />
+                <Route 
+                  path="/dashboard" 
+                  element={
+                    <FastAuthGuard>
+                      <UnifiedDashboard />
+                    </FastAuthGuard>
+                  } 
+                />
+                <Route 
+                  path="/staff-dashboard" 
+                  element={
+                    <FastAuthGuard>
+                      <StaffDashboard />
+                    </FastAuthGuard>
+                  } 
+                />
+                <Route 
+                  path="/citizen-dashboard" 
+                  element={
+                    <FastAuthGuard>
+                      <CitizenDashboard />
+                    </FastAuthGuard>
+                  } 
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <FastAuthGuard>
+                      <Profile />
+                    </FastAuthGuard>
+                  }
+                />
+                <Route path="/services" element={<OptimizedServices />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </OptimizedAuthProvider>
+        </TooltipProvider>
+      </LanguageProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

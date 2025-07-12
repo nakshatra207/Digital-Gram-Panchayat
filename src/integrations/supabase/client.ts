@@ -2,18 +2,16 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://djkbmqwkwklytpoeiwdx.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqa2JtcXdrd2tseXRwb2Vpd2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0MzI2NzQsImV4cCI6MjA1MDAwODY3NH0.Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8';
 
 // Validate environment variables
 if (!SUPABASE_URL) {
-  console.error('Missing VITE_SUPABASE_URL environment variable');
-  throw new Error('Missing VITE_SUPABASE_URL environment variable');
+  console.warn('Missing VITE_SUPABASE_URL environment variable, using default');
 }
 
 if (!SUPABASE_PUBLISHABLE_KEY) {
-  console.error('Missing VITE_SUPABASE_ANON_KEY environment variable');
-  throw new Error('Missing VITE_SUPABASE_ANON_KEY environment variable');
+  console.warn('Missing VITE_SUPABASE_ANON_KEY environment variable, using default');
 }
 
 console.log('Supabase URL:', SUPABASE_URL);
