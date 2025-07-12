@@ -146,12 +146,34 @@ export const OptimizedAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setIsLoading(true);
       
+      // Check if Supabase is properly configured
+      if (!import.meta.env.VITE_SUPABASE_URL || 
+          !import.meta.env.VITE_SUPABASE_ANON_KEY ||
+          import.meta.env.VITE_SUPABASE_URL === 'https://placeholder.supabase.co' ||
+          import.meta.env.VITE_SUPABASE_ANON_KEY === 'placeholder-key') {
+        console.warn('Supabase not configured - using demo mode');
+        toast({
+          title: "Demo Mode",
+          description: "Supabase not configured. Using demo authentication.",
+        });
+        return true; // Allow demo login
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
+          console.error('Cannot connect to Supabase. Please check your configuration.');
+          toast({
+            title: "Connection Error",
+            description: "Cannot connect to authentication service. Please check your configuration.",
+            variant: "destructive",
+          });
+          return false;
+        }
         console.error('Login error:', error);
         toast({
           title: "Login Failed",

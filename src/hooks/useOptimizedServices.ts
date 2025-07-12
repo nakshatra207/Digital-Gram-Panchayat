@@ -28,6 +28,15 @@ export const prefetchServices = async (queryClient: any) => {
 const fetchServices = async (): Promise<OptimizedService[]> => {
   console.log('Fetching optimized services with caching...');
   
+  // Check if Supabase is properly configured
+  if (!import.meta.env.VITE_SUPABASE_URL || 
+      !import.meta.env.VITE_SUPABASE_ANON_KEY ||
+      import.meta.env.VITE_SUPABASE_URL === 'https://placeholder.supabase.co' ||
+      import.meta.env.VITE_SUPABASE_ANON_KEY === 'placeholder-key') {
+    console.warn('Supabase not configured - returning empty services array');
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('services')
     .select('id, name, description, category, required_documents, processing_time, fees, is_active, created_at, updated_at')
@@ -37,6 +46,11 @@ const fetchServices = async (): Promise<OptimizedService[]> => {
 
   if (error) {
     console.error('Error fetching optimized services:', error);
+    if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
+      console.error('Cannot connect to Supabase. Please check your configuration.');
+      console.error('Returning empty services array for demo mode.');
+      return [];
+    }
     // Print detailed error (status code, message)
     if (error.details) {
       console.error('Supabase error details:', error.details);

@@ -62,14 +62,14 @@ const OptimizedLogin = () => {
       // Show success message immediately
       toast({
         title: "Login Successful",
-        description: `Welcome back! Redirecting to ${role} dashboard...`,
+        description: `Welcome back! Redirecting to dashboard...`,
       });
       
       // Navigate immediately without waiting
       // Redirect all users to /dashboard for unified fast loading
       navigate("/dashboard", { replace: true });
     } else {
-      setError('Invalid credentials. Please try again.');
+      setError('Login failed. Please check your credentials or configuration.');
     }
   }, [email, password, role, login, navigate, toast]);
 

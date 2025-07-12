@@ -60,6 +60,30 @@ This project uses a selection of modern, robust technologies across the frontend
 
 The project is _platform agnostic_: it runs the same way on Linux, Windows, and Mac, since it uses Node.js and standard project tooling.
 
+### ⚠️ Important: Supabase Configuration Required
+
+Before running the project, you must configure Supabase:
+
+1. **Create a Supabase Project:**
+   - Go to https://supabase.com/dashboard
+   - Create a new project
+   - Wait for the project to be fully set up
+
+2. **Get Your Credentials:**
+   - In your Supabase dashboard, go to Settings > API
+   - Copy your "Project URL" and "anon public" key
+
+3. **Configure Environment Variables:**
+   - Copy `.env.example` to `.env`
+   - Replace the placeholder values with your actual Supabase credentials:
+     ```
+     VITE_SUPABASE_URL=https://your-project-id.supabase.co
+     VITE_SUPABASE_ANON_KEY=your-anon-key-here
+     ```
+
+4. **Restart the Development Server:**
+   - After updating `.env`, restart with `npm run dev`
+
 ### 1. Prerequisites
 
 - **Node.js** (v18+ recommended)
